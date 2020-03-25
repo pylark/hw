@@ -23,3 +23,5 @@ for item in zip(plName, plDescription):
 
 db = pd.DataFrame(result)
 db.to_csv('excel_test.csv', mode='w', encoding='euc-kr')
+
+#질문: 10번째 항목 한 개만 csv파일로 저장됩니다. 10개 순서대로 csv 파일에 저장하고 싶은데, 어떻게 해야할까요?ㅠ
