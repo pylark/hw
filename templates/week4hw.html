@@ -1,0 +1,218 @@
+<html lang="en">
+
+<head>
+
+    <!-- Webpage Title -->
+    <title>알프스 소녀의 홈페이지</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+    <!-- style -->
+    <style type="text/css">
+        * {
+            font-family: 'Stylish', sans-serif;
+        }
+
+        .wrap {
+            width: 600px;
+            margin: auto;
+        }
+
+        .img {
+            text-align: center;
+        }
+
+        .text {
+            text-align: center;
+            font-family: 'Gamja Flower', cursive;
+        }
+
+        .order {
+            text-align: center;
+            font-family: 'Cute Font', cursive;
+            width: 600px;
+        }
+    </style>
+
+    <script>
+
+        function order2() {
+            let inputtedPhoneNumber = $("#order_phone").val();
+            let phoneNumberRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
+            if (!phoneNumberRegex.test(inputtedPhoneNumber)) {
+                alert("Invalid failure");
+            } else {
+                alert("Invalid check pass");
+            }
+        }
+
+        function order1() {
+            let txtaddress = $('#order_address').val()
+            let txtphonenum = $('#order_phone').val()
+            let txtcustomer = $('#order_name').val()
+            if (txtaddress == "" || txtcustomer == "" || txtphonenum == "") {
+                alert("모든 정보를 입력해주세요.")
+            } else {
+                alert("입력되었습니다.");
+            }
+
+            $.ajax({
+                type: 'POST', // 타입을 작성합니다.
+                url: '/shoppost', // url을 작성합니다.
+                data: { 'order_name': order_name, 'order_color': order_color, 'order_address': order_address, 'order_phone': order_phone },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+
+        function listing() {
+            // 1. 리뷰 목록을 서버에 요청하기
+            // 2. 요청 성공 여부 확인하기
+            // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+            $.ajax({
+                type: "GET",
+                url: "/shopget",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        // 2. 성공했을 때 리뷰를 올바르게 화면에 나타내기
+                        let rows = response['data']
+                        for (let i = 0; i < rows.length; i++) {
+                            let order_name = rows[i]['order_name'];
+                            let option_select = rows[i]['option_select'];
+                            let order_address = rows[i]['order_address'];
+                            let order_phone = rows[i]['order_phone']
+                            make_card(order_name, option_select, order_address, order_phone);
+                        }
+                    } else {
+                        alert('입력해주세요');
+                    }
+                }
+            });
+        }
+
+        function make_card(order_name, option_select, order_address, order_phone) {
+            let temp_html = '<tr>\
+                                <td>'+ order_name + '</td>\
+                                <td>'+ option_select + '</td>\
+                                <td>'+ order_address + '</td>\
+                                <td>'+ order_phone + '</td>\
+                            </tr>';
+            $('#orders-box').append(temp_html);
+        }
+    </script>
+
+
+
+</head>
+
+<body>
+    <div class="wrap">
+        <div>
+            <!-- 그림 -->
+            <br></br>
+            <p class="img">
+                <img src="https://mblogthumb-phinf.pstatic.net/20160111_137/uhody1205_1452495469774wQBfi_JPEG/538974.jpg?type=w2"
+                    alt="clean-air" />
+            </p>
+        </div>
+
+        <!-- 텍스트 -->
+        <div class="text">
+            <p>
+                <h2> 맑고 깨끗한 알프스 공기 <span style="font-size: 20px;"> 가격: 63,450원</span> </h2>
+            </p>
+            <p>
+                <h5 style="font-size: 16px;"> 수험생, 임산부에게 꼭 필요한 깨끗한 공기 <br>
+                    지금 바로, 24시간만 한정 수량 특가 판매 중!<br>
+                    고품격 유럽의 자연을 느껴보세요</h5>
+            </p>
+        </div>
+
+        <hr>
+        <div class="order">
+            <p>
+                <h2> 주문하기 <span style="font-size: 20px;">안전하게 총알배송!</span></h2>
+            </p>
+        </div>
+
+        <!-- 부트스트랩-->
+        <div>
+            <div class="request">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">주문자</span>
+                    </div>
+                    <input id="order_name" type="text" class="form-control" placeholder="이름을 입력하세요"
+                        aria-label="이름을 입력하세요" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">옵션</label>
+                    </div>
+                    <select class="custom-select" id="option_select">
+                        <option selected value>옵션을 선택하세요</option>
+                        <option value="100ml (0원)">100ml (+0원)</option>
+                        <option value="200ml (+70,000원)">200ml (+70,000원)</option>
+                        <option value="300ml + 50ml (+14,000원)">300ml + 50ml (+140,000원)</option>
+                        <option value="400ml + 100ml (+21,000원)">400ml + 100ml (+210,000원)</option>
+                    </select>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">배송지</span>
+                    </div>
+                    <input id="order_address" type="text" class="form-control" placeholder="상세 주소를 입력하세요"
+                        aria-label="상세 주소를 입력하세요" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">연락처</span>
+                    </div>
+                    <input id="order_phone" type="text" class="form-control" placeholder="010-1234-5678"
+                        aria-label="010-1234-5678" aria-describedby="basic-addon1"> <button onclick="order2"
+                        type="button" class="btn btn-outline-secondary"
+                        style="margin-top: 0px; margin-bottom: 0px;">확인</button>
+
+                    <!--<h6 id="warning1" class="warning">정확한 핸드폰 번호가 아닙니다. </h6>
+                    <h6 id="number1">올바른 번호를 입력해주세요.</h6> -->
+                </div>
+
+                <button onclick="order1()" type="button" class="btn btn-outline-secondary"
+                    style="margin-top: 10px; margin-bottom: 30px;">주문하기</button>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
